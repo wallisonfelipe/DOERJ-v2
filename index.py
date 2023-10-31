@@ -72,11 +72,11 @@ links = get_file_links(today)
 
 
 mapper = {
-    0: path + "Poder_Executivo" + current_date + ".pdf",
-    1: path + "Tribunal_de_contas" + current_date + ".pdf",
-    2: path + "Poder_Legislativo" + current_date + ".pdf",
-    3: path + "Municipalidades" + current_date + ".pdf",
-    4: path + "Publicacoes_a_pedido" + current_date + ".pdf",
+    0: path + f"{current_date}-Poder_Executivo"  + ".pdf",
+    1: path + f"{current_date}-Tribunal_de_contas" + ".pdf",
+    2: path + f"{current_date}-Poder_Legislativo"  + ".pdf",
+    3: path + f"{current_date}-Municipalidades" + ".pdf",
+    4: path + f"{current_date}-Publicacoes_a_pedido" + ".pdf",
 }
 count = 0
 
