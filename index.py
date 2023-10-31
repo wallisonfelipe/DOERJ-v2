@@ -81,7 +81,7 @@ mapper = {
 count = 0
 
 for link in links:
-    if link and isset(mapper[count]):
+    if link:
         get_file_from_link(link, mapper[count])
     count = count + 1
 
