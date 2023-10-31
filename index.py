@@ -18,7 +18,7 @@ path = "/var/www/robos/files/"
 file_path = os.path.join(path, "Poder_Executivo" + current_date + ".pdf")
 
 if os.path.exists(file_path):
-    print(f'The file {file_name} already exists in the directory {directory}. Finalizando execucao.')
+    print('Finalizando execucao.')
     exit()
 
 def get_today_link():
