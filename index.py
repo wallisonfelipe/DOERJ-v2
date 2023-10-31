@@ -9,9 +9,17 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import datetime
+import os
 
 url_base = "https://www.ioerj.com.br"
+current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+path = "/var/www/robos/files/"
+file_path = os.path.join(directory, "Poder_Executivo" + current_date + ".pdf")
 
+if os.path.exists(file_path):
+    print(f'The file {file_name} already exists in the directory {directory}. Finalizando execucao.')
+    return exit()
 
 def get_today_link():
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"}
@@ -61,12 +69,13 @@ def get_file_from_link(link, name):
 today=get_today_link()
 links = get_file_links(today)
 
+
 mapper = {
-    0: "Poder_Executivo.pdf",
-    1: "Tribunal_de_contas.pdf",
-    2: "Poder_Legislativo.pdf",
-    3: "Municipalidades.pdf",
-    4: "Publicacoes_a_pedido.pdf",
+    0: path + "Poder_Executivo" + current_date + ".pdf",
+    1: path + "Tribunal_de_contas" + current_date + ".pdf",
+    2: path + "Poder_Legislativo" + current_date + ".pdf",
+    3: path + "Municipalidades" + current_date + ".pdf",
+    4: path + "Publicacoes_a_pedido" + current_date + ".pdf",
 }
 count = 0
 
@@ -74,7 +83,3 @@ for link in links:
     get_file_from_link(link, mapper[count])
     count = count + 1
 
-
-
-
-# #saves the content response in a file
