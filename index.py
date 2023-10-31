@@ -41,6 +41,8 @@ def get_file_from_link(link, name):
     chromeIntall = ChromeDriverManager().install()
     options = webdriver.ChromeOptions()
     options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     
     driver = webdriver.Chrome(service=ChromeService(chromeIntall), options=options)
     driver.get(link)
