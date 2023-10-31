@@ -80,7 +80,7 @@ mapper = {
 count = 0
 
 for link in links:
-    if link:
+    if link and mapper[count]:
         get_file_from_link(link, mapper[count])
     count = count + 1
 
