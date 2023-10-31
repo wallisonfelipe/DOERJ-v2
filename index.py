@@ -15,7 +15,7 @@ import os
 url_base = "https://www.ioerj.com.br"
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 path = "/var/www/robos/files/"
-file_path = os.path.join(directory, "Poder_Executivo" + current_date + ".pdf")
+file_path = os.path.join(path, "Poder_Executivo" + current_date + ".pdf")
 
 if os.path.exists(file_path):
     print(f'The file {file_name} already exists in the directory {directory}. Finalizando execucao.')
