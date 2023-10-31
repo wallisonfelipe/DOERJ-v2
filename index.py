@@ -16,7 +16,8 @@ url_base = "https://www.ioerj.com.br"
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 path = "/var/www/robos/files/"
 file_path = os.path.join(path, "Poder_Executivo" + current_date + ".pdf")
-
+def isset(nameVar):
+    return nameVar in globals()
 if os.path.exists(file_path):
     print('Finalizando execucao.')
     exit()
@@ -80,7 +81,7 @@ mapper = {
 count = 0
 
 for link in links:
-    if link and mapper[count]:
+    if link and isset(mapper[count]):
         get_file_from_link(link, mapper[count])
     count = count + 1
 
