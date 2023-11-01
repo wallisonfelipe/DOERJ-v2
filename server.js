@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
         return;
       }
       // Render the list of files as an HTML page
-      const fileList = files.map(file => `<a href="/${file}">${file}</a><br />`).join('');
+      const fileList = files.map(file => `<a href="/${file}" target="_blank">${file}</a><br />`).join('');
       const html = `<h1>Files in the Directory:</h1><ul>${fileList}</ul>`;
       res.send(html);
     });
