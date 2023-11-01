@@ -17,6 +17,21 @@ current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 path = "/var/www/robos/files/"
 file_path = os.path.join(path, "Poder_Executivo" + current_date + ".pdf")
 
+months = {
+    1: "janeiro",
+    2: "fevereiro",
+    3: "março",
+    4: "abril",
+    5: "maio",
+    6: "junho",
+    7: "julho",
+    8: "agosto",
+    9: "setembro",
+    10: "outubro",
+    11: "novembro",
+    12: "dezembro"
+}
+
 def isset(nameVar):
     return nameVar in globals()
 
@@ -49,6 +64,12 @@ def get_file_links(url):
     real_links = []
     names = []
     links = site.select("#xo-content > font > div > ul > li")
+    page_date = site.select_one("#xo-content > font > b").text
+    pattern = r"\d+\s+de\s+\w+\s+de\s+\d+"
+    match = re.search(pattern, page_date)
+
+    inner_current_date = f"{datetime.datetime.now().day} de {months[datetime.datetime.now().month]} de {datetime.datetime.now().year}" 
+    
     for anchor in links:
         extra_edition = anchor.select_one('span')
         if extra_edition:
@@ -56,7 +77,9 @@ def get_file_links(url):
         else:
             extra_edition = ""
         temp_name = anchor.select_one("a").text + extra_edition
-        if file_exists(path + f"{current_date}-{temp_name}.pdf") == False:
+        if inner_current_date != match.group(0):
+            print("O arquivo de hoje ainda não foi postado")
+        elif file_exists(path + f"{current_date}-{temp_name}.pdf") == False:
             print(f"Arquivo {temp_name} não existe, criando...!")
             real_links.append("https://www.ioerj.com.br/portal/modules/conteudoonline/" + anchor.select_one("a").get("href"))
             names.append(temp_name)
