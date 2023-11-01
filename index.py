@@ -14,10 +14,17 @@ import os
 
 url_base = "https://www.ioerj.com.br"
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-path = "/var/www/robos/files/"
+path = "/home/felipe/github/DOERJ-v2/files/"
 file_path = os.path.join(path, "Poder_Executivo" + current_date + ".pdf")
+
 def isset(nameVar):
     return nameVar in globals()
+
+def file_exists(file_path):
+    if os.path.exists(file_path):
+        return True
+    return False    
+
 if os.path.exists(file_path):
     print('Finalizando execucao.')
     exit()
@@ -40,11 +47,27 @@ def get_file_links(url):
     
     site = BeautifulSoup(response.text, "html.parser")
     real_links = []
+    names = []
     links = site.select("#xo-content > font > div > ul > li")
     for anchor in links:
-        real_links.append("https://www.ioerj.com.br/portal/modules/conteudoonline/" + anchor.select_one("a").get("href"))
+        extra_edition = anchor.select_one('span')
+        if extra_edition:
+            extra_edition = "-" + extra_edition.text
+        else:
+            extra_edition = ""
+        temp_name = anchor.select_one("a").text + extra_edition
+        if file_exists(path + f"{current_date}-{temp_name}.pdf") == False:
+            print(f"Arquivo {temp_name} não existe, criando...!")
+            real_links.append("https://www.ioerj.com.br/portal/modules/conteudoonline/" + anchor.select_one("a").get("href"))
+            names.append(temp_name)
+        else:
+            print(f"Arquivo '{temp_name}' já existe.")
+            print("Buscando novamente em 30 minutos")
     
-    return real_links
+    return [
+        real_links,
+        names
+    ]
 
 def get_file_from_link(link, name):
     chromeIntall = ChromeDriverManager().install()
@@ -61,7 +84,7 @@ def get_file_from_link(link, name):
     documentId = driver.find_element("id", "pd").get_attribute("value")
     driver.close()
     documentId = documentId[:12] + 'P' + documentId[12:]
-    print(documentId)
+
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"}
     response = requests.get("https://www.ioerj.com.br/portal/modules/conteudoonline/mostra_edicao.php?k=" + documentId, headers=headers)
     with open(name, "wb") as file:
@@ -70,18 +93,10 @@ def get_file_from_link(link, name):
 today=get_today_link()
 links = get_file_links(today)
 
-
-mapper = {
-    0: path + f"{current_date}-Poder_Executivo"  + ".pdf",
-    1: path + f"{current_date}-Tribunal_de_contas" + ".pdf",
-    2: path + f"{current_date}-Poder_Legislativo"  + ".pdf",
-    3: path + f"{current_date}-Municipalidades" + ".pdf",
-    4: path + f"{current_date}-Publicacoes_a_pedido" + ".pdf",
-}
 count = 0
 
-for link in links:
+for link in links[0]:
     if link:
-        get_file_from_link(link, mapper[count])
+        get_file_from_link(link, path + f"{current_date}-{links[1][count]}.pdf")
     count = count + 1
 
