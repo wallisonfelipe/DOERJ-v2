@@ -135,6 +135,8 @@ links = get_file_links(today)
 
 count = 0
 
+remove_files_in_directory(path)
+
 for link in links["real_links"]:
     if link:
         get_file_from_link(link, f"files/{links['page_date']}-{links['names'][count]}.pdf")
