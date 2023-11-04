@@ -67,7 +67,8 @@ def get_file_links(url):
     page_date = site.select_one("#xo-content > font > b").text
     pattern = r"\d+\s+de\s+\w+\s+de\s+\d+"
     match = re.search(pattern, page_date)
-
+    page_date = match.group(0)
+    print(match.group(0))
     inner_current_date = f"{datetime.datetime.now().day} de {months[datetime.datetime.now().month]} de {datetime.datetime.now().year}" 
     
     for anchor in links:
@@ -77,20 +78,17 @@ def get_file_links(url):
         else:
             extra_edition = ""
         temp_name = anchor.select_one("a").text + extra_edition
-        if inner_current_date != match.group(0):
-            print("O arquivo de hoje ainda não foi postado")
-        elif file_exists(path + f"{current_date}-{temp_name}.pdf") == False:
-            print(f"Arquivo {temp_name} não existe, criando...!")
-            real_links.append("https://www.ioerj.com.br/portal/modules/conteudoonline/" + anchor.select_one("a").get("href"))
-            names.append(temp_name)
-        else:
-            print(f"Arquivo '{temp_name}' já existe.")
-            print("Buscando novamente em 30 minutos")
+        print(temp_name)
+        # if inner_current_date != match.group(0):
+        #     print("O arquivo de hoje ainda não foi postado")
+        real_links.append("https://www.ioerj.com.br/portal/modules/conteudoonline/" + anchor.select_one("a").get("href"))
+        names.append(temp_name)
     
-    return [
-        real_links,
-        names
-    ]
+    return {
+        "real_links": real_links,
+        "names": names,
+        "page_date": page_date
+    }
 
 def get_file_from_link(link, name):
     chromeIntall = ChromeDriverManager().install()
@@ -113,13 +111,13 @@ def get_file_from_link(link, name):
     with open(name, "wb") as file:
         file.write(response.content)
 
-today=get_today_link()
+today = get_today_link()
 links = get_file_links(today)
 
 count = 0
 
-for link in links[0]:
+for link in links["real_links"]:
     if link:
-        get_file_from_link(link, path + f"{current_date}-{links[1][count]}.pdf")
+        get_file_from_link(link, f"files/{links['page_date']}-{links['names'][count]}.pdf")
     count = count + 1
 
