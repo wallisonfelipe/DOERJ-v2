@@ -44,6 +44,25 @@ if os.path.exists(file_path):
     print('Finalizando execucao.')
     exit()
 
+def remove_files_in_directory(directory_path):
+    try:
+        # List all files in the directory
+        files = os.listdir(directory_path)
+
+        # Loop through the files and remove them
+        for file in files:
+            file_path = os.path.join(directory_path, file)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+                print(f"Removed: {file_path}")
+            else:
+                print(f"Skipping: {file_path} (not a file)")
+
+        print("All files removed successfully.")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def get_today_link():
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"}
     response = requests.get(url_base + "/portal/modules/conteudoonline/do_ultima_edicao.php", headers=headers)
@@ -70,7 +89,7 @@ def get_file_links(url):
     page_date = match.group(0)
     print(match.group(0))
     inner_current_date = f"{datetime.datetime.now().day} de {months[datetime.datetime.now().month]} de {datetime.datetime.now().year}" 
-    
+    count = 0
     for anchor in links:
         extra_edition = anchor.select_one('span')
         if extra_edition:
