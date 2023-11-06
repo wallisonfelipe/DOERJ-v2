@@ -3,13 +3,11 @@ const path = require('path');
 const fs = require ("fs")
 const app = express();
 const PORT = 8080; // You can change the port if needed
-
+const cors = require('cors');
 app.use(express.static('files'));
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+// Disable CORS
+app.use(cors());
+
 app.get('/', (req, res) => {
     fs.readdir("./files", (err, files) => {
       if (err) {
