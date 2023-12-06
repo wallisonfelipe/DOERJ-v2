@@ -54,7 +54,7 @@ async def sendFilesToTelegram():
     for file in files:
         new_file_name = file.split("-", 1)[1]
         
-        await bot.send_document(chat_id=-1002058293768, document=open(path + file, 'rb'), filename=new_file_name, timeout=100000)
+        await bot.send_document(chat_id=-1002058293768, document=open(path + file, 'rb'), filename=new_file_name, connect_timeout=1000000, pool_timeout=1000000)
 
 
 months = {
