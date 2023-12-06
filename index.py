@@ -47,10 +47,13 @@ async def sendFilesToTelegram():
     f = open("lastSend.txt", "w")
     f.write(current_date)
     f.close()
-
+    
+    inner_current_date = f"{datetime.datetime.now().day} de {months[datetime.datetime.now().month]} de {datetime.datetime.now().year}" 
+    bot = telegram.Bot(token='6985325316:AAG75Jh29MeHQBEwFfH2m3nq9d1N-RNLmAA')
+    await bot.send_message(chat_id=-1002058293768, text="Bom dia, segue os cadernos do dia " + inner_current_date)
     for file in files:
         new_file_name = file.split("-", 1)[1]
-        bot = telegram.Bot(token='6985325316:AAG75Jh29MeHQBEwFfH2m3nq9d1N-RNLmAA')
+        
         await bot.send_document(chat_id=-1002058293768, document=open(path + file, 'rb'), filename=new_file_name)
 
 
