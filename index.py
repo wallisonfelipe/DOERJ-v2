@@ -17,6 +17,8 @@ import telegram
 url_base = "https://www.ioerj.com.br"
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 path = "/var/www/robos/files/"
+path = "/home/felipe/github/DOERJ-v2/files/"
+
 
 file_path = os.path.join(path, "Poder_Executivo" + current_date + ".pdf")
 
@@ -26,15 +28,33 @@ def listFilesFromDir():
         if os.path.isfile(os.path.join(path, file)):
             files.append(file)
     return files
-print(listFilesFromDir())
+
+def sendedToday():
+    if os.path.exists("lastSend.txt"):
+        f = open("lastSend.txt", "r")
+        lastSend = f.read()
+        f.close()
+        if lastSend == current_date:
+            return True
+        else:
+            return False
+        
+    return False
 
 async def sendFilesToTelegram():
+    if sendedToday():
+        return
     print("Enviando arquivos para o telegram")
     files = listFilesFromDir()
+    f = open("lastSend.txt", "w")
+    f.write(current_date)
+    f.close()
+
     for file in files:
         new_file_name = file.split("-", 1)[1]
         bot = telegram.Bot(token='6985325316:AAG75Jh29MeHQBEwFfH2m3nq9d1N-RNLmAA')
         await bot.send_document(chat_id=-4090532156, document=open(path + file, 'rb'), filename=new_file_name)
+
 
 months = {
     1: "janeiro",
