@@ -20,6 +20,21 @@ path = "/var/www/robos/files/"
 
 file_path = os.path.join(path, "Poder_Executivo" + current_date + ".pdf")
 
+months = {
+    1: "janeiro",
+    2: "fevereiro",
+    3: "março",
+    4: "abril",
+    5: "maio",
+    6: "junho",
+    7: "julho",
+    8: "agosto",
+    9: "setembro",
+    10: "outubro",
+    11: "novembro",
+    12: "dezembro"
+}
+
 def listFilesFromDir():
     files = []
     for file in os.listdir(path):
@@ -53,24 +68,8 @@ async def sendFilesToTelegram():
     await bot.send_message(chat_id=-1002058293768, text="Bom dia, segue os cadernos do dia " + inner_current_date)
     for file in files:
         new_file_name = file.split("-", 1)[1]
-        
-        await bot.send_document(chat_id=-1002058293768, document=open(path + file, 'rb'), filename=new_file_name, connect_timeout=1000000, pool_timeout=1000000)
+        await bot.send_document(chat_id=-1002058293768, document=open(path + file, 'rb'), filename=new_file_name, read_timeout=1000000, connect_timeout=1000000, pool_timeout=1000000)
 
-
-months = {
-    1: "janeiro",
-    2: "fevereiro",
-    3: "março",
-    4: "abril",
-    5: "maio",
-    6: "junho",
-    7: "julho",
-    8: "agosto",
-    9: "setembro",
-    10: "outubro",
-    11: "novembro",
-    12: "dezembro"
-}
 
 def isset(nameVar):
     return nameVar in globals()
