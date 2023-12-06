@@ -11,11 +11,30 @@ import time
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import datetime
 import os
+import asyncio
+import telegram
 
 url_base = "https://www.ioerj.com.br"
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 path = "/var/www/robos/files/"
+
 file_path = os.path.join(path, "Poder_Executivo" + current_date + ".pdf")
+
+def listFilesFromDir():
+    files = []
+    for file in os.listdir(path):
+        if os.path.isfile(os.path.join(path, file)):
+            files.append(file)
+    return files
+print(listFilesFromDir())
+
+async def sendFilesToTelegram():
+    print("Enviando arquivos para o telegram")
+    files = listFilesFromDir()
+    for file in files:
+        new_file_name = file.split("-", 1)[1]
+        bot = telegram.Bot(token='6985325316:AAG75Jh29MeHQBEwFfH2m3nq9d1N-RNLmAA')
+        await bot.send_document(chat_id=-4090532156, document=open(path + file, 'rb'), filename=new_file_name)
 
 months = {
     1: "janeiro",
@@ -142,3 +161,5 @@ for link in links["real_links"]:
         get_file_from_link(link, f"files/{links['page_date']}-{links['names'][count]}.pdf")
     count = count + 1
 
+
+asyncio.run(sendFilesToTelegram())
