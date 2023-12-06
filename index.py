@@ -18,7 +18,6 @@ url_base = "https://www.ioerj.com.br"
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 path = "/var/www/robos/files/"
 
-
 file_path = os.path.join(path, "Poder_Executivo" + current_date + ".pdf")
 
 def listFilesFromDir():
@@ -52,7 +51,7 @@ async def sendFilesToTelegram():
     for file in files:
         new_file_name = file.split("-", 1)[1]
         bot = telegram.Bot(token='6985325316:AAG75Jh29MeHQBEwFfH2m3nq9d1N-RNLmAA')
-        await bot.send_document(chat_id=-2058293768, document=open(path + file, 'rb'), filename=new_file_name)
+        await bot.send_document(chat_id=-1002058293768, document=open(path + file, 'rb'), filename=new_file_name)
 
 
 months = {
