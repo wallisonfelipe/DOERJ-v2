@@ -17,6 +17,8 @@ import telegram
 url_base = "https://www.ioerj.com.br"
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 path = "/var/www/robos/files/"
+path = "/home/felipe/github/DOERJ-v2/files/"
+
 
 file_path = os.path.join(path, "Poder_Executivo" + current_date + ".pdf")
 
@@ -55,15 +57,20 @@ def sendedToday():
     return False
 
 async def sendFilesToTelegram():
+    inner_current_date = f"{datetime.datetime.now().day} de {months[datetime.datetime.now().month]} de {datetime.datetime.now().year}" 
     if sendedToday():
         return
-    print("Enviando arquivos para o telegram")
     files = listFilesFromDir()
+    print(files[0].split("-", 1)[0])
+    print(inner_current_date)
+    if files[0].split("-", 1)[0] != inner_current_date:
+        return
+    print("Enviando arquivos para o telegram")
     f = open("lastSend.txt", "w")
     f.write(current_date)
     f.close()
 
-    inner_current_date = f"{datetime.datetime.now().day} de {months[datetime.datetime.now().month]} de {datetime.datetime.now().year}" 
+    
     bot = telegram.Bot(token='6985325316:AAG75Jh29MeHQBEwFfH2m3nq9d1N-RNLmAA')
     await bot.send_message(chat_id=-1002058293768, text="Bom dia, segue os cadernos do dia " + inner_current_date)
     for file in files:
